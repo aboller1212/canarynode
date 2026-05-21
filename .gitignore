@@ -22,3 +22,5 @@ build/
 *.bin
 *.hex
 *.map
+*.lck
+~*
