@@ -1,0 +1,21 @@
+(kicad_sch
+	(version 20250114)
+	(generator "eeschema")
+	(generator_version "9.0")
+	(uuid "5f80bd57-9dd3-455e-b3d4-327fa2e1562b")
+	(paper "A4")
+	(title_block
+		(title "CANaryNode")
+		(date "2026-05-20")
+		(rev "A")
+		(company "Alexander Boller")
+		(comment 1 "Custom CAN sensor node: STM32G474 + IMU + environmental + USB")
+	)
+	(lib_symbols)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+)
