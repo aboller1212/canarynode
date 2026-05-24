@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "BMI270")(type "KiCad")(uri "/Users/alexboller/Downloads/ul_BMI270/KiCADv6/2026-05-24_20-31-08.kicad_sym")(options "")(descr ""))
+)
