@@ -1,0 +1,170 @@
+ERC report (2026-05-23T15:57:00-0400, Encoding UTF8)
+
+***** Sheet /
+[pin_not_connected]: Pin not connected
+    ; error
+    @(5.300 in, 2.850 in): Symbol U2 Pin 7 [PG10, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(5.300 in, 3.050 in): Symbol U2 Pin 5 [PF0, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(5.300 in, 3.150 in): Symbol U2 Pin 6 [PF1, Bidirectional, Line]
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(5.800 in, 2.350 in): Symbol U2 Pin 1 [VBAT, Power input, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(5.300 in, 3.350 in): Symbol U2 Pin 55 [PD2, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(5.300 in, 3.550 in): Symbol U2 Pin 8 [PC0, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(5.300 in, 3.650 in): Symbol U2 Pin 9 [PC1, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(5.300 in, 3.750 in): Symbol U2 Pin 10 [PC2, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(5.300 in, 3.850 in): Symbol U2 Pin 11 [PC3, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(5.300 in, 3.950 in): Symbol U2 Pin 22 [PC4, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(5.300 in, 4.050 in): Symbol U2 Pin 23 [PC5, Bidirectional, Line]
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(6.300 in, 2.350 in): Symbol U2 Pin 29 [VDDA, Power input, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(5.300 in, 4.150 in): Symbol U2 Pin 38 [PC6, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(5.300 in, 4.250 in): Symbol U2 Pin 39 [PC7, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(5.300 in, 4.350 in): Symbol U2 Pin 40 [PC8, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(5.300 in, 4.450 in): Symbol U2 Pin 41 [PC9, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(5.300 in, 4.550 in): Symbol U2 Pin 52 [PC10, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(5.300 in, 4.650 in): Symbol U2 Pin 53 [PC11, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(5.300 in, 4.750 in): Symbol U2 Pin 54 [PC12, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(5.300 in, 4.850 in): Symbol U2 Pin 2 [PC13, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(6.700 in, 2.650 in): Symbol U2 Pin 12 [PA0, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(6.700 in, 2.750 in): Symbol U2 Pin 13 [PA1, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(5.300 in, 4.950 in): Symbol U2 Pin 3 [PC14, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(6.700 in, 2.850 in): Symbol U2 Pin 14 [PA2, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(5.300 in, 5.050 in): Symbol U2 Pin 4 [PC15, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(6.700 in, 3.050 in): Symbol U2 Pin 18 [PA4, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(6.700 in, 3.150 in): Symbol U2 Pin 19 [PA5, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(6.700 in, 3.250 in): Symbol U2 Pin 20 [PA6, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(6.700 in, 3.350 in): Symbol U2 Pin 21 [PA7, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(6.700 in, 3.450 in): Symbol U2 Pin 42 [PA8, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(6.700 in, 3.550 in): Symbol U2 Pin 43 [PA9, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(6.700 in, 3.650 in): Symbol U2 Pin 44 [PA10, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(6.700 in, 3.750 in): Symbol U2 Pin 45 [PA11, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(6.700 in, 3.850 in): Symbol U2 Pin 46 [PA12, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(6.700 in, 3.950 in): Symbol U2 Pin 49 [PA13, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(6.700 in, 4.050 in): Symbol U2 Pin 50 [PA14, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(6.700 in, 4.150 in): Symbol U2 Pin 51 [PA15, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(6.700 in, 4.350 in): Symbol U2 Pin 24 [PB0, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(6.700 in, 4.450 in): Symbol U2 Pin 25 [PB1, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(6.700 in, 4.550 in): Symbol U2 Pin 26 [PB2, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(6.700 in, 4.650 in): Symbol U2 Pin 56 [PB3, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(6.700 in, 4.750 in): Symbol U2 Pin 57 [PB4, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(6.700 in, 4.850 in): Symbol U2 Pin 58 [PB5, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(6.700 in, 4.950 in): Symbol U2 Pin 59 [PB6, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(6.700 in, 5.050 in): Symbol U2 Pin 60 [PB7, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(6.700 in, 5.150 in): Symbol U2 Pin 61 [PB8, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(6.700 in, 5.250 in): Symbol U2 Pin 62 [PB9, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(6.700 in, 5.350 in): Symbol U2 Pin 30 [PB10, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(6.000 in, 6.150 in): Symbol U2 Pin 15 [VSS, Power input, Line]
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(6.000 in, 6.150 in): Symbol U2 Pin 15 [VSS, Power input, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(6.700 in, 5.450 in): Symbol U2 Pin 33 [PB11, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(6.700 in, 5.550 in): Symbol U2 Pin 34 [PB12, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(6.700 in, 5.650 in): Symbol U2 Pin 35 [PB13, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(6.700 in, 5.750 in): Symbol U2 Pin 36 [PB14, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(6.700 in, 5.850 in): Symbol U2 Pin 37 [PB15, Bidirectional, Line]
+
+ ** ERC messages: 55  Errors 55  Warnings 0
