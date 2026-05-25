@@ -1,0 +1,44 @@
+Refdes Prefix,Value,Description,MFR Part Number,Manufacturer,LCSC P/N,JLCPCB Tier,Package,Quantity,Unit Price ($),Footprint,Notes
+U1,TPS62160DGKR,"3V-17V to 3.3V buck converter, 1 A",TPS62160DGKR,Texas Instruments,C60726,Extended,VSON-8,9687,1.31,Package_SO:MSOP-8_3x3mm_P0.65mm,Powers entire 3.3V rail
+L1,3.3uH,Power inductor,XFL3012-332MEC,Coilcraft,C3911580,Extended,3.0x3.0mm,126,1.01,Coilcraft_Local:IND_XFL3012_COC,
+C1,10µF,"10V, X5R, 0603",CL10A106KP8NNNC,Samsung,C19702,Basic,0603,16300000,0.01,Capacitor_SMD:C_0603_1608Metric,Buck output
+C2,22µF,"16V, X5R, 0603",CL10A226MQ8NRNC,Samsung,C59461,Basic,0603,14100000,0.01,Capacitor_SMD:C_0603_1608Metric,Buck input
+R1,562kΩ,"0402, 1%",0402WGF5623TCE,Uni-Royal,C48838,Extended,0402,28178,,Resistor_SMD:R_0402_1005Metric,Buck FB divider
+R2,180kΩ,"0402, 1%",0402WGF1803TCE,Uni-Royal,C25760,Extended,0402,720861,,Resistor_SMD:R_0402_1005Metric,Buck FB divider
+R3,100kΩ,"0402, 1%",0402WGF1003TCE,Uni-Royal,C25741,Basic,0402,4092328,,Resistor_SMD:R_0402_1005Metric,Buck FB divider
+U2,STM32G474RET6,"170 MHz Cortex-M4 MCU, 512 KB Flash, FDCAN, USB FS",STM32G474RET6,STMicroelectronics,C521608,Extended,LQFP-64,1,3.69,Package_QFP:LQFP-64_10x10mm_P0.5mm,Main MCU - pinout locked in CubeMX
+SW1,SW_Push,Reset button,HX 3x4x2-2P-1.6N,hanxia,C49234124,Extended,SMD 3x4mm 2-pin,101172,0.01,Button_Switch_SMD:SW_SPST_TL3342,Cat 3 (convention pick)
+D1,ESDZL5-1F4,USB ESD,ESDZL5-1F4,STMicroelectronics,C2970171,Extended,0201,3637,0.01,Diode_SMD:D_0201_0603Metric,Cat 2 (Nucleo reference exact match)
+J1,Conn_01x02,2-pin 2.54mm header,HX PZ2.54-1x2P TP-YQ,hanxia,C41417359,Extended,1x2 2.54mm,4719,0.01,Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical,
+"C3,C5,C6",1µF,"0603, X5R, 50V, ±10%",CL10A105KB8NNNC,Samsung,C15849,Basic,0603,,,Capacitor_SMD:C_0603_1608Metric,
+C12,4.7µF,"0603, X5R, 16V, ±10%",CL10A475KO8NNNC,Samsung,C19666,Basic,0603,,,Capacitor_SMD:C_0603_1608Metric,
+"C4,C7-C11,C13",100nF,"0402, X7R, 16V, ±10%",CL05B104KO5NNNC,Samsung,C1525,Basic,0402,,,Capacitor_SMD:C_0402_1005Metric,
+R4-R6,0Ω,"0402, 1% (jumper)",0402WGF0000TCE,Uni-Royal,C17168,Basic,0402,,,Resistor_SMD:R_0402_1005Metric,
+R7,10kΩ,"0402, 1%, 50V",0402WGF1002TCE,Uni-Royal,C25744,Basic,0402,,,Resistor_SMD:R_0402_1005Metric,
+J2,USB_C_Receptacle_USB2.0_16P,"USB-C receptacle, USB 2.0, 16-pin SMD",TYPE-C-31-M-12,Korean Hroparts Elec,C165948,Basic,SMD,,,Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12,
+U3,USBLC6-2P6,USB 2.0 ESD protection,USBLC6-2P6,STMicroelectronics,C15999,Extended,SOT-666,,,Package_TO_SOT_SMD:SOT-666,
+"R8,R9",5.1kΩ,"0402, 1%",0402WGF5101TCE,Uni-Royal,C25905,Basic,0402,6333007,,Resistor_SMD:R_0402_1005Metric,USB-C CC pulldowns
+C14,100nF,"0402, X7R, 16V, ±10%",CL05B104KO5NNNC,Samsung,C1525,Basic,0402,,,Capacitor_SMD:C_0402_1005Metric,
+C15,10µF,"10V, X5R, 0603",CL10A106KP8NNNC,Samsung,C19702,Basic,0603,,,Capacitor_SMD:C_0603_1608Metric,
+U4,BMI270,6-axis IMU,BMI270,Bosch,C2836813,Extended,LGA-14,,,BMI270:BMI270_BOS,
+"C16,C17",100nF,"0402, X7R, 16V, ±10%",CL05B104KO5NNNC,Samsung,C1525,Basic,0402,,,Capacitor_SMD:C_0402_1005Metric,
+U5,BME280,Environmental sensor (T/P/H),BME280,Bosch,C92489,Extended,LGA-8 2.5x2.5mm,,,Package_LGA:Bosch_LGA-8_2.5x2.5mm_P0.65mm_ClockwisePinNumbering,SDO tied to GND for I2C addr 0x76
+"R10,R11",4.7kΩ,"0402, 1%",0402WGF4701TCE,Uni-Royal,C25900,Basic,0402,3286031,,Resistor_SMD:R_0402_1005Metric,I2C1 pullups
+"C18,C19",100nF,"0402, X7R, 16V, ±10%",CL05B104KO5NNNC,Samsung,C1525,Basic,0402,,,Capacitor_SMD:C_0402_1005Metric,
+U6,TCAN334GDR,"CAN FD transceiver, 3.3V logic, 5 Mbps",TCAN334GDR,Texas Instruments,C189939,Extended,SOIC-8,451,1.51,Package_SO:SOIC-8_3.9x4.9mm_P1.27mm,
+"R12,R13",0Ω,"0402, 1% (jumper)",0402WGF0000TCE,Uni-Royal,C17168,Basic,0402,,,Resistor_SMD:R_0402_1005Metric,
+C20,100nF,"0402, X7R, 16V, ±10%",CL05B104KO5NNNC,Samsung,C1525,Basic,0402,,,Capacitor_SMD:C_0402_1005Metric,
+C21,1µF,"0603, X5R, 50V, ±10%",CL10A105KB8NNNC,Samsung,C15849,Basic,0603,,,Capacitor_SMD:C_0603_1608Metric,
+D2,PESD2CANFD27V-TR,CAN bus ESD/TVS,PESD2CANFD27V-TR,Nexperia,C552488,Extended,SOT-23,,,PESD2CANFD27V-TR:SOT23_PESD2_NEX,
+R14,120Ω,"0603, 1%, 100mW",0603WAF1200T5E,Uni-Royal,C22787,Basic,0603,1771326,,Resistor_SMD:R_0603_1608Metric,CAN termination
+J3,Screw_Terminal_01x03,3-pin 3.5mm pluggable header (board side),DB2EVC-3.5-3P-GN,DORABO,C430550,Extended,3P 3.5mm,9225,,Connector_Phoenix_MC:PhoenixContact_MC_1,5_3-G-3.5_1x03_P3.50mm_Horizontal,Verify body outline silkscreen at PCB layout
+J4,Conn_01x02,2-pin 2.54mm header,HX PZ2.54-1x2P TP-YQ,hanxia,C41417359,Extended,1x2 2.54mm,4719,0.01,Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical,BOOT0 jumper
+D3,LED red,"0603, Vf 1.8-2.4V",KT-0603R,Hubei Kento,C2286,Basic,0603,7918661,0.01,LED_SMD:LED_0603_1608Metric,
+D4,LED amber,"0603, Vf 2.4V",KT-0603Y,Hubei Kento,C2287,Extended,0603,19755,0.01,LED_SMD:LED_0603_1608Metric,Originally spec'd green; swapped to amber for 330Ω compatibility
+D5,LED yellow-green,"0603, Vf 2.0-2.2V",KT-0603YG,Hubei Kento,C2289,Extended,0603,48870,0.01,LED_SMD:LED_0603_1608Metric,
+D6,LED amber,"0603, Vf 2.4V",KT-0603Y,Hubei Kento,C2287,Extended,0603,19755,0.01,LED_SMD:LED_0603_1608Metric,Duplicate of D4; distinguish by silkscreen + firmware blink pattern
+R15-R18,330Ω,"0402, 1%",0402WGF3300TCE,Uni-Royal,C25104,Basic,0402,3378192,,Resistor_SMD:R_0402_1005Metric,LED current limiting
+SW2,SW_Push,User button,HX 3x4x2-2P-1.6N,hanxia,C49234124,Extended,SMD 3x4mm 2-pin,101172,0.01,Button_Switch_SMD:SW_SPST_TL3342,Same part as SW1
+C22,100nF,"0402, X7R, 16V, ±10%",CL05B104KO5NNNC,Samsung,C1525,Basic,0402,,,Capacitor_SMD:C_0402_1005Metric,
+J5,Conn_02x05_Odd_Even,SWD header 10-pin 1.27mm 2x5 SMD,KH-1.27PH180-2X5P-L7.2-S,Shenzhen Kinghelm,C4943297,Extended,2x5 1.27mm SMD,2171,,Connector_PinHeader_1.27mm:PinHeader_2x05_P1.27mm_Vertical_SMD,ARM Cortex 10-pin Debug pinout
+J6,Conn_01x04,UART header 4-pin 2.54mm,HX PZ2.54-1x4P TP-YQ,hanxia,C41417361,Extended,1x4 2.54mm,13668,0.01,Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical,

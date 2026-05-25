@@ -226,7 +226,16 @@
     "equivalence_files": []
   },
   "erc": {
-    "erc_exclusions": [],
+    "erc_exclusions": [
+      [
+        "lib_symbol_mismatch|304800|927100|37a26832-226c-46bf-b872-726a43b94156|00000000-0000-0000-0000-000000000000|||",
+        "BME280 Library Bug ..."
+      ],
+      [
+        "pin_to_pin|457200|850900|ce0640f4-335f-4fb2-8407-b7d92245daec|b9844bec-bfe3-4460-b71e-2751a42ae660|/5f80bd57-9dd3-455e-b3d4-327fa2e1562b|/5f80bd57-9dd3-455e-b3d4-327fa2e1562b|/5f80bd57-9dd3-455e-b3d4-327fa2e1562b",
+        "\"BME280 SDO tied to GND for I2C addr 0x76 per DS Fig 17 — Bidirectional pin type is symbol library default but pin is used as strap, not data\""
+      ]
+    ],
     "meta": {
       "version": 0
     },
@@ -560,12 +569,30 @@
           "label": "Datasheet",
           "name": "Datasheet",
           "show": true
+        },
+        {
+          "group_by": false,
+          "label": "Sim.Pins",
+          "name": "Sim.Pins",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Description",
+          "name": "Description",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "#",
+          "name": "${ITEM_NUMBER}",
+          "show": false
         }
       ],
       "filter_string": "",
       "group_symbols": true,
       "include_excluded_from_bom": true,
-      "name": "Default Editing",
+      "name": "",
       "sort_asc": true,
       "sort_field": "Reference"
     },
@@ -596,7 +623,15 @@
     "meta": {
       "version": 1
     },
-    "net_format_name": "",
+    "net_format_name": "KiCad",
+    "ngspice": {
+      "fix_include_paths": true,
+      "meta": {
+        "version": 0
+      },
+      "model_mode": 4,
+      "workbook_filename": ""
+    },
     "page_layout_descr_file": "",
     "plot_directory": "",
     "space_save_all_events": true,
