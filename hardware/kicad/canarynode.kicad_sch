@@ -6955,6 +6955,16 @@
 			(embedded_fonts no)
 		)
 	)
+	(text "BOOT0 jumper (J1) = boot mode selector"
+		(exclude_from_sim no)
+		(at 186.69 145.288 0)
+		(effects
+			(font
+				(size 0.635 0.635)
+			)
+		)
+		(uuid "34e3bb04-216a-4ec7-82a6-cf0bcc83c35b")
+	)
 	(text "POWER INPUT & 3.3V REGULATION USB-C VBUS (5V) → TPS62160 buck → 3.3V @ 1A"
 		(exclude_from_sim no)
 		(at 49.784 13.716 0)
@@ -6995,6 +7005,16 @@
 		)
 		(uuid "ac1eb6a5-2cd2-4ff7-a27b-220624d3d8e3")
 	)
+	(text "end-of-bus enable"
+		(exclude_from_sim no)
+		(at 82.804 182.118 0)
+		(effects
+			(font
+				(size 0.635 0.635)
+			)
+		)
+		(uuid "b11e5e59-c2f7-47d1-9d46-cbde5d555609")
+	)
 	(text "CAN FD TRANSCEIVER\nTCAN334GDR on FDCAN2 (PB5/PB6) + switchable 120Ω termination (J4) + PESD2CANFD27V TVS + 3-pin pluggable bus connector (J3)"
 		(exclude_from_sim no)
 		(at 121.92 170.942 0)
@@ -7004,6 +7024,16 @@
 			)
 		)
 		(uuid "b29a61f6-8068-4d67-bb09-b1a68c2b1e5d")
+	)
+	(text "SDO→GND = I2C addr 0x76 strap"
+		(exclude_from_sim no)
+		(at 50.546 82.55 0)
+		(effects
+			(font
+				(size 0.635 0.635)
+			)
+		)
+		(uuid "bf3fd5c1-aeab-4e51-a4da-824538efcd76")
 	)
 	(text "MCU\nSTM32G474RET6 - 170MHz Cortex-M4, 512KB Flash, FDCAN, \nUSB FS + reset (SW1/NRST) + BOOT0 jumper (J1) + VDD/VDDA decoupling"
 		(exclude_from_sim no)
