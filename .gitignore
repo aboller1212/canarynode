@@ -24,3 +24,7 @@ build/
 *.map
 *.lck
 ~*
+.DS_Store
+hardware/kicad/jlcpcb/
+*.lck
+fp-info-cache
