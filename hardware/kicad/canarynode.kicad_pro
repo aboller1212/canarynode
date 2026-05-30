@@ -48,11 +48,56 @@
         "silk_text_thickness": 0.1,
         "silk_text_upright": false,
         "zones": {
-          "min_clearance": 0.5
+          "min_clearance": 0.2
         }
       },
       "diff_pair_dimensions": [],
-      "drc_exclusions": [],
+      "drc_exclusions": [
+        [
+          "silk_edge_clearance|100000000|73940000|2b99cc51-8f3c-403a-9868-14c3e88c34f6|dbcb45c9-6018-4f58-9935-bb86804b687d",
+          ""
+        ],
+        [
+          "silk_edge_clearance|100000000|86060000|2b99cc51-8f3c-403a-9868-14c3e88c34f6|1e8d6dab-7c68-4670-878c-cdee707b9844",
+          ""
+        ],
+        [
+          "silk_edge_clearance|50000000|74900000|2b99cc51-8f3c-403a-9868-14c3e88c34f6|d246dbdd-3cc3-46d7-9a84-f81d9385fcb9",
+          ""
+        ],
+        [
+          "silk_edge_clearance|50000000|84300000|2b99cc51-8f3c-403a-9868-14c3e88c34f6|ffb940e1-4c77-4775-81be-64f4eb6f8826",
+          ""
+        ],
+        [
+          "silk_over_copper|70016212|69240001|70c00834-fa7b-4e58-b037-b094e7b4dad4|00000000-0000-0000-0000-000000000000",
+          ""
+        ],
+        [
+          "silk_over_copper|95189960|82500284|d103033d-fb7d-4665-bac1-dda6bfbe5857|00000000-0000-0000-0000-000000000000",
+          ""
+        ],
+        [
+          "silk_over_copper|95190000|84500000|ce263366-0ea1-4d21-9cc5-cf232328dfbc|00000000-0000-0000-0000-000000000000",
+          ""
+        ],
+        [
+          "silk_overlap|65671359|61420000|34cc931d-2a8a-4afc-80f1-35570a5b473a|cf74662f-6468-4dfb-a9df-3140ea696d76",
+          ""
+        ],
+        [
+          "silk_overlap|69071359|61420000|6e2d1118-5e00-4f5a-921d-7fa6f83a5b7e|ea104f94-6e0d-47be-829a-77dbbb52fbd9",
+          ""
+        ],
+        [
+          "silk_overlap|72646359|61335000|72104d4a-2dd0-43fb-a602-4745f9d11ea4|f6c25c6c-83e8-482d-adc8-62013978a854",
+          ""
+        ],
+        [
+          "silk_overlap|76181359|61335000|89f24144-dc1a-4b8b-ada9-ef7d9728812a|badf9341-0f54-4a43-b25c-cc323a2de667",
+          ""
+        ]
+      ],
       "meta": {
         "version": 2
       },
@@ -85,24 +130,24 @@
         "lib_footprint_mismatch": "warning",
         "malformed_courtyard": "error",
         "microvia_drill_out_of_range": "error",
-        "mirrored_text_on_front_layer": "warning",
+        "mirrored_text_on_front_layer": "error",
         "missing_courtyard": "ignore",
         "missing_footprint": "warning",
         "net_conflict": "warning",
-        "nonmirrored_text_on_back_layer": "warning",
+        "nonmirrored_text_on_back_layer": "error",
         "npth_inside_courtyard": "ignore",
         "padstack": "warning",
         "pth_inside_courtyard": "ignore",
         "shorting_items": "error",
-        "silk_edge_clearance": "warning",
-        "silk_over_copper": "warning",
-        "silk_overlap": "warning",
+        "silk_edge_clearance": "error",
+        "silk_over_copper": "error",
+        "silk_overlap": "error",
         "skew_out_of_range": "error",
         "solder_mask_bridge": "error",
         "starved_thermal": "error",
-        "text_height": "warning",
+        "text_height": "error",
         "text_on_edge_cuts": "error",
-        "text_thickness": "warning",
+        "text_thickness": "error",
         "through_hole_pad_without_hole": "error",
         "too_many_vias": "error",
         "track_angle": "error",
@@ -550,7 +595,7 @@
       "gencad": "",
       "idf": "",
       "netlist": "",
-      "plot": "",
+      "plot": "hardware/kicad/gerbers/",
       "pos_files": "",
       "specctra_dsn": "",
       "step": "",
@@ -641,6 +686,12 @@
           "label": "#",
           "name": "${ITEM_NUMBER}",
           "show": false
+        },
+        {
+          "group_by": false,
+          "label": "LCSC",
+          "name": "LCSC",
+          "show": true
         }
       ],
       "filter_string": "",
