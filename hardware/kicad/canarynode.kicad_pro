@@ -596,7 +596,7 @@
       "idf": "",
       "netlist": "",
       "plot": "hardware/kicad/gerbers/",
-      "pos_files": "",
+      "pos_files": "hardware/kicad/",
       "specctra_dsn": "",
       "step": "",
       "svg": "",
@@ -695,7 +695,7 @@
         }
       ],
       "filter_string": "",
-      "group_symbols": true,
+      "group_symbols": false,
       "include_excluded_from_bom": true,
       "name": "",
       "sort_asc": true,

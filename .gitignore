@@ -1,30 +1,12 @@
-# KiCad
-*-backups/
-*.bak
-*.kicad_prl
-*.kicad_pro-bak
-fp-info-cache
-*-cache.lib
-_autosave-*
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Editor
-.vscode/
-.idea/
-
-# Build artifacts
 build/
 *.o
+*.d
 *.elf
 *.bin
-*.hex
 *.map
-*.lck
-~*
-.DS_Store
-hardware/kicad/jlcpcb/
-*.lck
+*-backups/
+#auto_saved_files#
 fp-info-cache
+*.bak
+.DS_Store
+docs/datasheets/Reference Manuals/

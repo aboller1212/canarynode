@@ -5847,6 +5847,7 @@
 				)
 			)
 		)
+		(attr exclude_from_pos_files)
 		(pad "" np_thru_hole circle
 			(at 0 0)
 			(size 2.7 2.7)
@@ -7387,6 +7388,7 @@
 				)
 			)
 		)
+		(attr exclude_from_pos_files)
 		(pad "" np_thru_hole circle
 			(at 0 0)
 			(size 2.7 2.7)
@@ -10818,6 +10820,7 @@
 				)
 			)
 		)
+		(attr exclude_from_pos_files)
 		(pad "" np_thru_hole circle
 			(at 0 0)
 			(size 2.7 2.7)
