@@ -10,3 +10,5 @@ fp-info-cache
 *.bak
 .DS_Store
 docs/datasheets/Reference Manuals/
+
+firmware/docfirmware/*.pdf
