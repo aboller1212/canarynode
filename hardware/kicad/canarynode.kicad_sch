@@ -14672,7 +14672,7 @@
 		(dnp no)
 		(uuid "5fcccf78-3b54-41b4-945d-985b1c6f53c0")
 		(property "Reference" "J2"
-			(at 247.142 135.128 0)
+			(at 258.064 134.62 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14681,7 +14681,7 @@
 			)
 		)
 		(property "Value" "USB_C_Receptacle_USB2.0_16P"
-			(at 247.142 137.668 0)
+			(at 250.698 137.668 0)
 			(effects
 				(font
 					(size 1.27 1.27)

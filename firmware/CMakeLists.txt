@@ -10,13 +10,20 @@ project(canary_firmware LANGUAGES C CXX ASM)
 #THIS CREATES TARGET canary_firmware
 add_executable(canary_firmware
     src/main.c 
-    startup/startup_stm32g474.s
+    startup/startup_stm32g474.c
 )
 
 #Tells the compiler where to look when it sees "#include something.h"
-#Remember to add in vendor/cmsis/ once CMSIS headers are dropped
 target_include_directories(canary_firmware PRIVATE 
     inc/
+    vendor/cmsis_core/
+    vendor/cmsis_device/    
+)
+
+# Tells stm32g4xx.h which chip variant we have, so it expands the right
+# register definitions. Without this it stops at #error "Please select the target device"
+target_compile_definitions(canary_firmware PRIVATE
+    STM32G474xx
 )
 
 #Per-target compiler flags, on top of the CPU flags from toolchain
