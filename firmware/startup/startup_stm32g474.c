@@ -20,6 +20,9 @@ void Default_Handler(void);
 //main function, must be called before called in src/main.c 
 int main(void);
 
+//TIM6 update interrupt - body defined in main.c
+void TIM6_DAC_IRQHandler(void);
+
 //Part 3: Vector table
 
 //Tells compiler 'put this variable or function in th names output section
@@ -43,7 +46,8 @@ void (* const vector_table[])(void) = {
     0,                          // 0x34 reserved
     Default_Handler,            // 0x38: PendSV
     Default_Handler,            // 0x3C: SysTick
-    // Peripheral interrupts (0x40+) go here later
+    [16 ... 69] = Default_Handler, //peripherals not assigned
+    [70] = TIM6_DAC_IRQHandler,    //defined in main- stim defined TIM6 IRQ=54 so 54+16=70
 };
 
 //Runs first on power-on. sets up C runtime, then calls main
