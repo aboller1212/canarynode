@@ -68,7 +68,7 @@ int main(void) {
     //FDCAN_CCCR_INIT = Initialization bit
     //FDCAN_CCCR_CCE = Configuration Change Enable
     FDCAN1->CCCR |= FDCAN_CCCR_INIT; //request init mode
-    
+
     //Blocking-busy wait: fine for one-time setup
     while(!(FDCAN1->CCCR & FDCAN_CCCR_INIT)); // & checks only the init bit in the CCCR register, loops until its set
 
@@ -86,18 +86,95 @@ int main(void) {
         CAN needs a dedicated spot in RAM because CAN-FD messages can be 64-bits of data
         this is a lot so FDCAN will put the data in a small RAM areas and I congfig registers to divide the RAM
         Filter list: which incoming IDs do I accept?
-        Rx FIFO 0: incoing messages land here (N slots)
+        Rx FIFO 0: incoming messages land here (N slots)
+        ^ Note: FDCAN has two receive inboxes FIFO0 and FIFO1, They're seperate queues in the message RAM, so you can route traffic to different inboxes 
         Tx buffers: outgoing messages I write here (M slots)
         To transmit: write message (ID+data) into a Tx buffer slot in the RAM, then poke register TXBAR telling it to send buffer
         To receive: FDCAN puts the messages into the Rx FIFO area, we read status register RXFOS to see how many are waiting and to read out of RAM
     */
 
+    // RXGFC = RX Global Filter Configuration : controls FDCAN's global rule for what happens to incoming frames
+    // ^ normally a node sets up filters, a list of IDs it cares about, either frames match a filter or don't
+    // ANFS = Accept Non-matching Frames, Standard, bit 4 : no filter->00 = put it in Rx FIFO 0 (01 = FIFO 1, 10/11 = reject)
+    // ^ 2 bit field in RXGFC (RMO0440). 00=accept Rx in FIFO 0, 01=accept Rx in FIFO 1, 10/11 = reject
+    // LSS = List Size Standard, bit 16 : how many standard filters you've defined -> I've set 0
     
+    //Sets the values in the RXGFC register for LSS and ANFS, the other fields just get their reset values
+    FDCAN1->RXGFC = (0u << FDCAN_RXGFC_LSS_Pos) //there are 0 standard filters
+                  | (0u << FDCAN_RXGFC_ANFS_Pos); //non-matching std frames -> Rx FIFO 0
 
-    //NOTE; even though code is held here the hardware still calls the function
-    while(1) {
-        //Nothing - was in place for old-polling blink
-    }
+    //Internal loopback (self-test, no pins or bus)
+    FDCAN1->CCCR |= FDCAN_CCCR_TEST; // enable test mode (unlocks the TEST register)
+    FDCAN1->CCCR |= FDCAN_CCCR_MON; // bus monitoring -> maked loopback INTERNAL : MON = TX loops to RX inside the chip, pins disconnected
+    FDCAN1->TEST |= FDCAN_TEST_LBCK; // turn loopback on
+
+    //Note: you can only change FDCANs config if INIT=1 but FDCAN will be stopped
+    FDCAN1->CCCR &= ~FDCAN_CCCR_INIT; //leave init mode, FDCAN goes live (clears just the init bits)
+    while(FDCAN1->CCCR & FDCAN_CCCR_INIT); //wait until FDCAN is running, use this because INIT may still read 1 for a moment after I write 0, exits once 0
+
+    /*
+        Loopback Test:
+        1. Write a frame (an ID + some data bytes) into a Tx buffer in RAM
+        2. Request send (set the buffers bit in TXBAR (Tx Buffer Add Request))
+        3. Check it arrived (read Rx FIFO 0 Status, if fill level is > 0 a frame landed)
+        4. Read it out of FIFO 0 and confirm it matches what I sent
+    */
+
+    //Tx buffer lives in RAM at SRAMCAN_BASE + 0x278 : this is where we write messages into this peice of memory
+    //FDCAN1 Tx buffer 0 in message RAM, volatile because it can change, points to 32-bit words
+    volatile uint32_t *txbuf = (volatile uint32_t *)(SRAMCAN_BASE + 0x278);
+
+    
+    //NOTE: FDCAN HARDWARE will read the 1st word as ID, 2nd word as DLC, 3+ word as data
+    //The ID is in the 0 position of txbuf
+    //we left-align the bits because ID slot is 29 bits, our ID field is 11-bits -> insert at bit 18, flags are 29-31(untouched)
+    txbuf[0] = (0x123u << 18); //send a message with ID 0x123
+    
+    //the length = 8 data bytes
+    txbuf[1] = (8u << 16); //placed at the 16th bit
+
+    //the data slots, DLC tells hardware HOW FAR TO READ, DLC = 8 = 2 bytes, reads txbuf[2,3]
+    txbuf[2] = 0xDEADBEEF; //data bytes 0-3 (4 bytes per word = 32-bit)
+    txbuf[3] = 0x12345678; //data bytes 4-7 
+
+    
+    //Each bit = one Tx buffer, bit0 = buffer0
+    //set only register - after writing 1, the bit auto-clears
+    FDCAN1->TXBAR = (1u << 0); //reguest transmission of TX buffer 0
+
+    //confirm the frame arrived
+    //RXF0S = Rx FIFO0 status register -> Field F0FL = fill level = how many messages sitting in FIFO0 right now
+    while(!(FDCAN1->RXF0S & FDCAN_RXF0S_F0FL_Msk)); //wait until a message comes, F0FL field will be greater than 0
+
+    //Once we know that there IS a message waiting in the buffer we need to knw which of FIFO0s 3 slot hold it
+    //the F0GI slot = Get Index, which FIF0 slot 0,1,2 holds the oldest unread message
+    // when we do >>F0GI_Po = (>> 8) we are shifting it down to where the F0GI exists which is bit 8
+    // shifting it right by 8 turns it into either 0,1,2
+    uint32_t getidx = (FDCAN1->RXF0S & FDCAN_RXF0S_F0GI_Msk) >> FDCAN_RXF0S_F0GI_Pos;
+
+    //now we need to compute the slot's address in message RAM
+    // 0xB0: Rx FIFO 0s base offset in message RAM
+    //getidx * 0x48 = skip to the right slot, each slot is 0x48 so getidx * 0x48 would get you to the right slot
+    volatile uint32_t *rxbuf = (volatile uint32_t *)(SRAM_BASE + 0xB0 + getidx * 0x48);
+    //R0 = ID word, R1= DLC + Length, R2,3 = data -> same packing as Tx
+
+    //we shift the ID field down out of [28:18], then mask 11-bits 0x7FF = 11 ones, to drop the flags
+    uint32_t id = (rxbuf[0] >> 18) & 0x7FFu; 
+
+    //Shift the dlc down from [19:16], mask 4-bits 0xF
+    uint32_t dlc = (rxbuf[1] >> 16) & 0xFu; 
+
+    //the data we sent
+    uint32_t d0 = rxbuf[2]; //data bytes 0-3
+    uint32_t d1 = rxbuf[3]; //data bytes 4-7
+
+    //RXF0A = Rx FIFO 0 Acknowledghe register at FDCAN1 + 0x094
+    //Field F0AI: Acknowledge index, write the slot index you just read, FDCAN advances read and frees the slot
+    //no need to shift because F0AI is at [2:0] so already at the bottom
+    FDCAN1->RXF0A = getidx; //acknowledge and free the slot, F0FL will drop by 1
+
+
+    return 0;
 }
 
 void TIM6_DAC_IRQHandler(void){
