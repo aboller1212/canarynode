@@ -47,10 +47,10 @@ void (* const vector_table[])(void) = {
     Default_Handler,            // 0x38: PendSV
     Default_Handler,            // 0x3C: SysTick
     [16 ... 69] = Default_Handler, //peripherals not assigned
-    [70] = TIM6_DAC_IRQHandler,    //defined in main- stim defined TIM6 IRQ=54 so 54+16=70
+    [70] = TIM6_DAC_IRQHandler,    //defined in main- stm defined TIM6 IRQ=54 so 54+16=70
 };
 
-//Runs first on power-on. sets up C runtime, then calls main
+// Runs first on power-on. sets up C runtime, then calls main
 // noreturn = compiler knows this never returns
 __attribute__((noreturn))
 void Reset_Handler(void)
