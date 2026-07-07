@@ -11,6 +11,8 @@ project(canary_firmware LANGUAGES C CXX ASM)
 add_executable(canary_firmware
     src/main.c 
     startup/startup_stm32g474.c
+    src/bme280.c
+    src/i2c.c
 )
 
 #Tells the compiler where to look when it sees "#include something.h"
