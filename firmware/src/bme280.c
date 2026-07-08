@@ -17,6 +17,9 @@ typedef struct {
 //a variable declared inside bme280_init() dies when that function returns, but bme280_read() will need these coefficients on every measurement so we declare it static(lives in RAM the entire run)
 static bme280_calib_t calib;
 
+//t_fine = fine temperature : intermediate value that temperature compensation computes as a side effect
+static int32_t t_fine;
+
 
 //0x76 is the i2c bus, the ID (reg) passes through is the specific device passed, 0x60 is the value in the reg(0xD0)
 //returns 0 = success and nonzero if failure - IMPORTANT to return a status to know if functional
@@ -110,4 +113,94 @@ uint8_t bme280_init(void) {
     i2c_write_reg(0x76, 0xF4, 0x27);
 
     return 0; //success
+}
+
+/*
+    Compensation formulas taken from the Bosch Data Sheet
+    The substitution rules:
+    Bosch's typedefs -> stdint.h names:
+    BME280_S32_t -> int32_t
+    BME280_U32_t -> uint32_t
+    BME280_S64_t -> int64_t
+    dig_XX -> calib.XX — ex. dig_T1 -> calib.T1, dig_P6 -> calib.P6, dig_H4 -> calib.H4
+    adc_T / adc_P / adc_H — leave as the function parameter (the raw reading passed in)
+    t_fine — leave as-is; it's your file-scope global.
+    Make each function static 
+*/
+
+// Returns temperature in DegC, resolution 0.01 DegC. "5123" = 51.23 DegC.
+// Sets the file-scope t_fine, used later by pressure & humidity compensation.
+static int32_t bme280_compensate_T(int32_t adc_T) {
+    int32_t var1, var2, T;
+    var1 = ((((adc_T >> 3) - ((int32_t)calib.T1 << 1))) * ((int32_t)calib.T2)) >> 11;
+    var2 = (((((adc_T >> 4) - ((int32_t)calib.T1)) * ((adc_T >> 4) - ((int32_t)calib.T1))) >> 12) * ((int32_t)calib.T3)) >> 14;
+    t_fine = var1 + var2;
+    T = (t_fine * 5 + 128) >> 8;
+    return T;
+}
+
+// Returns pressure in Pa as unsigned Q24.8 (24 int + 8 frac bits).
+// "24674867" = 24674867/256 = 96386.2 Pa = 963.862 hPa. Needs t_fine set first.
+static uint32_t bme280_compensate_P(int32_t adc_P) {
+    int64_t var1, var2, p;
+    var1 = ((int64_t)t_fine) - 128000;
+    var2 = var1 * var1 * (int64_t)calib.P6;
+    var2 = var2 + ((var1 * (int64_t)calib.P5) << 17);
+    var2 = var2 + (((int64_t)calib.P4) << 35);
+    var1 = ((var1 * var1 * (int64_t)calib.P3) >> 8) + ((var1 * (int64_t)calib.P2) << 12);
+    var1 = (((((int64_t)1) << 47) + var1)) * ((int64_t)calib.P1) >> 33;
+    if (var1 == 0) {
+        return 0; // avoid exception caused by division by zero
+    }
+    p = 1048576 - adc_P;
+    p = (((p << 31) - var2) * 3125) / var1;
+    var1 = (((int64_t)calib.P9) * (p >> 13) * (p >> 13)) >> 25;
+    var2 = (((int64_t)calib.P8) * p) >> 19;
+    p = ((p + var1 + var2) >> 8) + (((int64_t)calib.P7) << 4);
+    return (uint32_t)p;
+}
+
+// Returns humidity in %RH as unsigned Q22.10 (22 int + 10 frac bits).
+// "47445" = 47445/1024 = 46.333 %RH. Needs t_fine set first.
+static uint32_t bme280_compensate_H(int32_t adc_H) {
+    int32_t v_x1_u32r;
+    v_x1_u32r = (t_fine - ((int32_t)76800));
+    v_x1_u32r = (((((adc_H << 14) - (((int32_t)calib.H4) << 20) - (((int32_t)calib.H5) * v_x1_u32r)) + ((int32_t)16384)) >> 15) * (((((((v_x1_u32r * ((int32_t)calib.H6)) >> 10) * (((v_x1_u32r * ((int32_t)calib.H3)) >> 11) + ((int32_t)32768))) >> 10) + ((int32_t)2097152)) * ((int32_t)calib.H2) + 8192) >> 14));
+    v_x1_u32r = (v_x1_u32r - (((((v_x1_u32r >> 15) * (v_x1_u32r >> 15)) >> 7) * ((int32_t)calib.H1)) >> 4));
+    v_x1_u32r = (v_x1_u32r < 0 ? 0 : v_x1_u32r);
+    v_x1_u32r = (v_x1_u32r > 419430400 ? 419430400 : v_x1_u32r);
+    return (uint32_t)(v_x1_u32r >> 12);
+}
+
+/*
+    One read burst can read all 8 measurment bytes starting at address 0xF7-0xFE
+    The data register map packs the bytes in big endian (MSB is at the lowest address)
+    Temperature and Pressure are both 20 bits so they need 3 registers 8+8+4
+    20 bit pressure: buf[0](pres[19:12]), buf[1]pres[11:4], buf[2](top nibble)(pres[3:0] in bits [7:4])
+    20 bit temperature: buf[3](temp[19:12]), buf[4](temp[11:4]), buf[5](temp[3:0] in bits [7:4] top nibble)
+    16 bit humidity: buf[6](hum[15:8]), buf[7](hum[7:0])
+*/
+
+bme280_reading_t bme280_read(void) {
+    //declaring the buffer for the burst read
+    uint8_t buf[8];
+    // read all 8 registers for all of the data and store into buf[0..7]
+    i2c_read_burst(0x76, 0xF7, buf, 8);
+    //                MSB in [19:12]     buf[1] in [11:4]   top 4 bits of buf[2] into [3:0]
+    int32_t adc_P = ( buf[0] << 12 ) | ( buf[1] << 4 ) | ( buf[2] >> 4 );
+    //              buf[3] [19:12]      buf[4] [11:4]   buf[5] top bits into [3:0]
+    int32_t adc_T = ( buf[3] << 12 ) | ( buf[4] << 4 ) | ( buf[5] >> 4 );
+    //                  high bits       low bits  -> 16 bits not 20   
+    int32_t adc_H = ( ( buf[6] << 8 ) | buf[7] );
+
+    //NOTE: bme280_compensate_T must run first as it SETS t_fine
+    bme280_reading_t result; //struct with temp, pressure, humidity
+    //temp reading
+    result.temperature = bme280_compensate_T(adc_T);
+    //pressure reading
+    result.pressure = bme280_compensate_P(adc_P);
+    //humidity reading
+    result.humidity = bme280_compensate_H(adc_H);
+
+    return result;
 }

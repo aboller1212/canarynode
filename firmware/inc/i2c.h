@@ -4,7 +4,6 @@
 //stdint.h will land in main.c indirectly, so main.c can now use uint8_t... etc even though it never included stdint.h
 #include <stdint.h>
 
-
 //prototypes
 void i2c_init(void);
 void i2c_write_reg(uint8_t addr, uint8_t reg, uint8_t val);
