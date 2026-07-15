@@ -24,7 +24,7 @@ int main(void) {
 
     // -- I2C + BME280 Smoke Test -- 
     // bme280_init() reads chip ID 0xD0: returns 0 if it == 0x60, else 1
-    uint8_t bme_status bme280_init();
+    uint8_t bme_status = bme280_init();
 
     // Fail Trap:
     // On failure: light the LED solid and halt, before TIM6 ever starts
@@ -46,5 +46,9 @@ int main(void) {
     // re-read forever so live values apppear in the debugger
     while (1) {
         reading = bme280_read();
+        volatile float temp_c    = reading.temperature / 100.0f;   // C
+        volatile float press_hpa = reading.pressure    / 25600.0f;  // hPa
+        volatile float hum_rh    = reading.humidity    / 1024.0f;   // %RH
+        for (volatile int i = 0; i < 400000; i++);                  // pace (a few reads/sec)
     }
 }

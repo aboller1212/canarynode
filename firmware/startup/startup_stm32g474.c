@@ -55,6 +55,14 @@ void (* const vector_table[])(void) = {
 __attribute__((noreturn))
 void Reset_Handler(void)
 {
+    // Enable the FPU before any float instruction runs.
+    // Build uses -mfloat-abi=hard, so the compiler emits FPU ops; without turning
+    // the FPU on, the first one HardFaults. CPACR (SCB, 0xE000ED88) bits [23:20] =
+    // CP10/CP11 full access. (This is what CMSIS SystemInit normally does)
+    *(volatile uint32_t *)0xE000ED88 |= (0xFUL << 20);
+    __asm volatile ("dsb");
+    __asm volatile ("isb");
+
     //copy .data from flash to RAM
     uint32_t *src = _sidata; //flash source: init values stored here
     uint32_t *dst = _sdata;  //RAM destination

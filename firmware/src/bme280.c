@@ -25,11 +25,13 @@ static int32_t t_fine;
 //returns 0 = success and nonzero if failure - IMPORTANT to return a status to know if functional
 uint8_t bme280_init(void) {
 
+        //NOTE: BREAKOUT IS 0x77 ACTUAL is 0x76
     // ds -> i2c address is 0x76 because we tied SDO->GND
     // ds -> register(located at 0x76) -> 0xD0(id) reads 0x60 for a BME280
     uint8_t whoami = i2c_read_reg(0x76, 0xD0);
     if(whoami != 0x60) return 1; // return 1 if fail
 
+    //NOTE: BREAKOUT IS 0x77 ACTUAL is 0x76
     // reset:
     i2c_write_reg(0x76, 0xE0, 0xB6); //ds -> if you write 0xB6 into reg 0xE0, the device resets
     //after reset we must WAIT for im_update to complete (bit 0 of status register 0xF3) | complete = 0 means done
@@ -45,6 +47,7 @@ uint8_t bme280_init(void) {
     uint8_t calib1[26];
     uint8_t calib2[7]; 
 
+    //NOTE: BREAKOUT IS 0x77 ACTUAL is 0x76
     //same addr(bme280), respective starting addr, resective buffers, sizes
     i2c_read_burst(0x76, 0x88, calib1, 26);
     i2c_read_burst(0x76, 0xE1, calib2, 7);
@@ -181,6 +184,7 @@ static uint32_t bme280_compensate_H(int32_t adc_H) {
     16 bit humidity: buf[6](hum[15:8]), buf[7](hum[7:0])
 */
 
+//NOTE: BREAKOUT IS 0x77 ACTUAL is 0x76
 bme280_reading_t bme280_read(void) {
     //declaring the buffer for the burst read
     uint8_t buf[8];
