@@ -11,14 +11,15 @@ void i2c_init(void) {
     //Kernel Clock Defaults to 00=PCLK1, no line needed
 
     // --- Pin Configuration ---
+    // CHANGE WITH CUSTOM
     // AF corresponds to 10
     GPIOB->MODER &= ~(GPIO_MODER_MODE8 | GPIO_MODER_MODE9); //clears the MODER bits for PB 8,9
     GPIOB->MODER |= (GPIO_MODER_MODE8_1 | GPIO_MODER_MODE9_1); //sets both PB 8,9 to AF
 
     // PB 8,9 -> AFR[1], remember formula (N-8) * 4 for bit positions
     GPIOB->AFR[1] &= ~((0xFu << 0) | (0xFu << 4)); // clears the 4-bit AFR fields
-    GPIOB->AFR[1] |= ((4u << 0) | (4u << 4)); //sets the value to 4 in each location
-
+    GPIOB->AFR[1] |= ((4u << 0) | (4u << 4)); // sets the value to 4 in each location
+S
     //OTYPER = GPIO Output Type Register
     GPIOB->OTYPER |= (GPIO_OTYPER_OT8 | GPIO_OTYPER_OT9); //this makes both PB 8,9 open drain which is neccesary for i2c
 

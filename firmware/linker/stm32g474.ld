@@ -9,6 +9,7 @@ MEMORY
 {
     /* Flash: non-volatile. Holds code + constants + .data's initial values. */
     /* (rx) = readable + executable. Starts at 0x08000000 per Cortex-M convention. */
+    /* Actual board will have flash length -> 256k */
     FLASH (rx)  : ORIGIN = 0x08000000, LENGTH = 512K
 
     /* SRAM: volatile. Holds stack, globals, and copied-in .data at runtime. */
