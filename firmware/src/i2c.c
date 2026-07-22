@@ -19,7 +19,7 @@ void i2c_init(void) {
     // PB 8,9 -> AFR[1], remember formula (N-8) * 4 for bit positions
     GPIOB->AFR[1] &= ~((0xFu << 0) | (0xFu << 4)); // clears the 4-bit AFR fields
     GPIOB->AFR[1] |= ((4u << 0) | (4u << 4)); // sets the value to 4 in each location
-S
+
     //OTYPER = GPIO Output Type Register
     GPIOB->OTYPER |= (GPIO_OTYPER_OT8 | GPIO_OTYPER_OT9); //this makes both PB 8,9 open drain which is neccesary for i2c
 
