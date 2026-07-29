@@ -16,6 +16,8 @@ add_executable(canary_firmware
     src/fdcan.c
     src/blink.c
     src/spi.c
+    src/bmi270.c
+    src/bmi270_config.c
 )
 
 #Tells the compiler where to look when it sees "#include something.h"
