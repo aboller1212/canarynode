@@ -40,7 +40,75 @@ uint8_t bmi270_init(void) {
     uint8_t status = spi_read_reg(0x21);
     if((status & 0x0F) != 0x01) return 1; // checks the internal status is 0000 0001
 
+    /*
+        After the config load, accel and gyro are powered off
+        PWR_CTRL: Register 0x7D, turns on accel and gyro: bit1=gyr_en, bit2=acc_en
+        ^ 0000 0110 = 0x06, write to reg 0x7D
+    */  
+    spi_write_reg(0x7D, 0x06);
 
+    /*
+        ACC_CONF (reg 0x40): 
+        acc_odr[3:0]: samples per second, table provided-> 0x08=100Hz 
+        acc_bwp[6:4]: filtering/averaging 0x02 = norm_avg4 (normal)
+        acc_filter_perf[7]: ulp vs hp -> use hp(performance optimized)(0x01)
+        so we get:  1 010 1000 -> 0xA8
+    */
+    spi_write_reg(0x40, 0xA8);
+
+    /*
+        GYR_CONF (reg 0x42):
+        gyr_odr[3:0]: clock speed. 100Hz = 0x08
+        gyr_bwp[5:4]: 0x02 = normal mode
+        gyr_noise_perf[6]: performance optimized: 0x01
+        gyr_filtre_perf[7]: performance optimized: 0x01
+        final:   1 1 10 1000 -> 1110 1000 -> 0xE8
+    */
+    spi_write_reg(0x42, 0xE8);
+
+    /* 
+        ACC_RANGE(reg 0x41)
+        +/- 4g, gravity being 1g, so 2g headroom is tight, use 4g 
+        acc_range[1:0]: 0x01 -> range 4g
+    */
+    spi_write_reg(0x41, 0x01);
+
+    /*
+        GYR_RANGE(reg 0x43)
+        +/- 2000 deg/s
+        gyr_range[2:0]: 0x00 = 2000 deg/s
+        ois_range[3]: for stabilization (leave off) 0x00
+    */
+    spi_write_reg(0x43, 0x00);
 
     return 0;
+}
+
+bmi270_reading_t bmi270_read(void) {
+    //6 readings, 2 registers per reading (12), 8 bits per register
+    uint8_t buf[12];
+
+    //store results into buf
+    spi_read_burst(0x0C, buf, 12);
+
+    //Unpacking little endian style
+    int16_t acc_x = (buf[1] << 8) | buf[0];
+    int16_t acc_y = (buf[3] << 8) | buf[2];
+    int16_t acc_z = (buf[5] << 8) | buf[4];
+
+    int16_t gyr_x = (buf[7] << 8) | buf[6];
+    int16_t gyr_y = (buf[9] << 8) | buf[8];
+    int16_t gyr_z = (buf[11] << 8) | buf[10];
+
+    // combining the results to return
+    bmi270_reading_t result;
+
+    result.acc_x = acc_x;
+    result.acc_y = acc_y;
+    result.acc_z = acc_z;
+    result.gyr_x = gyr_x;
+    result.gyr_y = gyr_y;
+    result.gyr_z = gyr_z;
+
+    return result;
 }
