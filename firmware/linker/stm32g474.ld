@@ -1,6 +1,6 @@
 /* ============================================================
  * STM32G474RET6 Linker Script
- * Target: 512 KB Flash, 128 KB SRAM, Cortex-M4F
+ * Target: 256 KB Flash, 128 KB SRAM, Cortex-M4F
  * ============================================================ */
 
 /* ---- Physical memory regions on the chip ---- */
@@ -10,7 +10,7 @@ MEMORY
     /* Flash: non-volatile. Holds code + constants + .data's initial values. */
     /* (rx) = readable + executable. Starts at 0x08000000 per Cortex-M convention. */
     /* Actual board will have flash length -> 256k */
-    FLASH (rx)  : ORIGIN = 0x08000000, LENGTH = 512K
+    FLASH (rx)  : ORIGIN = 0x08000000, LENGTH = 256K
 
     /* SRAM: volatile. Holds stack, globals, and copied-in .data at runtime. */
     /* (rwx) = readable + writable + executable. Base 0x20000000 is Cortex-M architectural. */

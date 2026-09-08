@@ -7,26 +7,26 @@ void TIM6_DAC_IRQHandler(void){
     TIM6->SR &= ~TIM_SR_UIF;
 
     //toggle PA5
-    GPIOA->ODR ^= GPIO_ODR_OD5;
+    GPIOB->ODR ^= GPIO_ODR_OD0;
 }
 
 //drives the LED ON
 void led_on(void) {
-    GPIOA->ODR |= GPIO_ODR_OD5;
+    GPIOB->ODR |= GPIO_ODR_OD0;
 }
 
 void led_init(void) {
     // --- GPIOA Enable ---
     //Enable the GPIOA clock, sets the GPIOA bit high without changing other bit configurations
-    RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN;
+    RCC->AHB2ENR |= RCC_AHB2ENR_GPIOBEN;
 
-    //Clear PA5:
+    //Clear PA0:
     // MODER comes up nonzero at reset, so clear PA5's two bits to 00 first, can't just OR 01 onto whatever's there
-    // ~ flips the MODE5 mask so we AND 0s onto PA5 (forces them low) and 1s everywhere else (leaves other pins alone)
-    GPIOA->MODER &= ~GPIO_MODER_MODE5;
+    // ~ flips the MODE0 mask so we AND 0s onto PA5 (forces them low) and 1s everywhere else (leaves other pins alone)
+    GPIOB->MODER &= ~GPIO_MODER_MODE0;
 
     // PA5 field is 00 now; OR in the low bit to make it 01 = output mode
-    GPIOA->MODER |= GPIO_MODER_MODE5_0;
+    GPIOB->MODER |= GPIO_MODER_MODE0_0;
 }
 
 void tim6_init(void) {

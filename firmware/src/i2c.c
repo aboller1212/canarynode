@@ -4,7 +4,7 @@
 void i2c_init(void) {
     // --- GPIOB Enable ---
     //Enable the GPIOB clock, sets the GPIOB bit high without changing other bit configurations
-    RCC->AHB2ENR |= RCC_AHB2ENR_GPIOBEN;
+    RCC->AHB2ENR |= RCC_AHB2ENR_GPIOBEN | RCC_AHB2ENR_GPIOAEN;
 
     // --- I2C1 clock enable ---
     RCC->APB1ENR1 |= RCC_APB1ENR1_I2C1EN;
@@ -13,15 +13,24 @@ void i2c_init(void) {
     // --- Pin Configuration ---
     // CHANGE WITH CUSTOM
     // AF corresponds to 10
-    GPIOB->MODER &= ~(GPIO_MODER_MODE8 | GPIO_MODER_MODE9); //clears the MODER bits for PB 8,9
-    GPIOB->MODER |= (GPIO_MODER_MODE8_1 | GPIO_MODER_MODE9_1); //sets both PB 8,9 to AF
+    //SCL PIN
+    GPIOA->MODER &= ~(GPIO_MODER_MODE15); //clears the MODER bits for PB 8,9
+    GPIOA->MODER |= (GPIO_MODER_MODE15_1); //sets both PA15 to AF
 
-    // PB 8,9 -> AFR[1], remember formula (N-8) * 4 for bit positions
-    GPIOB->AFR[1] &= ~((0xFu << 0) | (0xFu << 4)); // clears the 4-bit AFR fields
-    GPIOB->AFR[1] |= ((4u << 0) | (4u << 4)); // sets the value to 4 in each location
+    //SDA PIN
+    GPIOB->MODER &= ~(GPIO_MODER_MODE7);
+    GPIOB->MODER |= (GPIO_MODER_MODE7_1); //PB7 for SCL 
+    // PB 7 -> AFR[0], PA15 ->AFR[1], remember formula (N-8) * 4 for bit positions
+    GPIOA->AFR[1] &= ~((0xFu << 28)); // clears the 4-bit AFR fields
+    GPIOA->AFR[1] |= ((4u << 28)); // sets the value to 4 in each location
+
+    GPIOB->AFR[0] &= ~((0xFu << 28)); // clears the 4-bit AFR fields
+    GPIOB->AFR[0] |= ((4u << 28));
 
     //OTYPER = GPIO Output Type Register
-    GPIOB->OTYPER |= (GPIO_OTYPER_OT8 | GPIO_OTYPER_OT9); //this makes both PB 8,9 open drain which is neccesary for i2c
+    GPIOA->OTYPER |= (GPIO_OTYPER_OT15); //this makes both PA15, PB7 open drain which is neccesary for i2c
+
+    GPIOB->OTYPER |= (GPIO_OTYPER_OT7);
 
     // --- Bus Speed (TIMINGR) ---
     //locate in RMO kernel speed = 16MHz, target is 100kHz - values then plugged into i2c calculator

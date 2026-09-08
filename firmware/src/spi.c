@@ -3,27 +3,32 @@
 #include "stm32g474xx.h"
 
 /*
-SCK: PB3: Mode AF5
-MISO: PB4: Mode AF5
-MOSI: PB5: Mode AF5
-CS: PB7: Plan GPIO Output (Software controlled not hardware)
+SCK: PA5: Mode AF5
+MISO: PA6: Mode AF5
+MOSI: PA7: Mode AF5
+CS: PA4: Plan GPIO Output (Software controlled not hardware)
 */
 void spi_init(void) {
 
-// GPIOB Enable
-RCC->AHB2ENR |= RCC_AHB2ENR_GPIOBEN; //port B pins (SCK/MISO/MOSI/CS)
+// GPIOA Enable
+RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN; //port A pins (SCK/MISO/MOSI/CS)
 
 // SPI Clock Enable
 RCC->APB2ENR |= RCC_APB2ENR_SPI1EN; //spi peripheral (APB2)
-
 // Pin Configuration (10=AF), (01=Output)
-GPIOB->MODER &= ~(GPIO_MODER_MODE3 | GPIO_MODER_MODE4 | GPIO_MODER_MODE5 | GPIO_MODER_MODE7); // Clears MODER bits for PB 3,4,5
-GPIOB->MODER |= (GPIO_MODER_MODE3_1 | GPIO_MODER_MODE4_1 | GPIO_MODER_MODE5_1 | GPIO_MODER_MODE7_0); // set bit one of each MODER field so PB3,4,5 read 10, and PB7 01
+GPIOA->MODER &= ~(GPIO_MODER_MODE4 | GPIO_MODER_MODE5 | GPIO_MODER_MODE6 | GPIO_MODER_MODE7); // Clears MODER bits for PA 4,5,6,7
+GPIOA->MODER |= (GPIO_MODER_MODE5_1 | GPIO_MODER_MODE6_1 | GPIO_MODER_MODE7_1 | GPIO_MODER_MODE4_0); // PA5,6,7 read 10 for AF, PA4 reads 01 since CS is a plain output I drive myself
 // AFR[1] is pins 8-15, AFR[0] is pins 0-7
 // Field for pin N = bits[Nx4 +3: Nx4]
-// PB3: [15:12] | PB4: [19:16] | PB5: [23:20] | PB7 needs no AFR
-GPIOB->AFR[0] &= ~((0xFu << 12) | (0xFu << 16) | (0xFu << 20)); //Clears but fields(4 bits) for PB 3,4,5
-GPIOB->AFR[0] |= ((5u << 12) | (5u << 16) | (5u << 20)); //store 5 for mode AF5 in each location
+// PA5: [23:20] | PA6: [27:24] | PA7: [31:28] | PA4 needs no AFR
+GPIOA->AFR[0] &= ~((0xFu << 20) | (0xFu << 24) | (0xFu << 28)); //Clears the 4 bit fields for PA 5,6,7
+GPIOA->AFR[0] |= ((5u << 20) | (5u << 24) | (5u << 28)); //store 5 for mode AF5 in each location
+
+
+// OSPEEDR = Output Speed Register, 2 bits per pin (same shape as MODER), controls slew rate: how fast the driver swings the pin low<->high
+// 11 = very high, default 00 is slow to keep EMI down but rounds off the edges. Only the outputs need it (SCK/MOSI), MISO is an input so its driver is unused
+GPIOA->OSPEEDR |= (3u << (5*2)) | (3u << (7*2)); //PA5(SCK) and PA7(MOSI) to very high speed
+
 
 /*
  CR1 Register Config:
@@ -49,7 +54,7 @@ SPI1->CR2 = (SPI_CR2_DS_0 | SPI_CR2_DS_1 | SPI_CR2_DS_2 | SPI_CR2_FRXTH);
 
 // Chip select is active-low, low=(selected, talk to me) - high=(deselected, ignore the bus)
 // need CS to sit high (sensor deselected)
-GPIOB->ODR |= GPIO_ODR_OD7; // drives PB7 high
+GPIOA->ODR |= GPIO_ODR_OD4; // drives PB7 high
 
 // SPI Enable
 SPI1->CR1 |= SPI_CR1_SPE; //turns on the spi for the peripheral
@@ -90,8 +95,8 @@ uint8_t spi_read_reg(uint8_t reg) { // read one register
     //Bit 7 of the address byte = R/W flag. bit7=1: read, bit7=0: write
     //ex: read register 0x00, set bit 7 to 1 -> 0x00 | 0x80 = 0x80, or with the 7 bit set (0x80)
 
-    // Step 1: Drive CS(PB7) low
-    GPIOB->ODR &= ~(GPIO_ODR_OD7);
+    // Step 1: Drive CS(PA4) low
+    GPIOA->ODR &= ~(GPIO_ODR_OD4);
 
     // Step 2: send address, ignore return, OR with bit7=1 for read
     spi_transfer(reg | 0x80); 
@@ -102,15 +107,15 @@ uint8_t spi_read_reg(uint8_t reg) { // read one register
     // Step 4: send another dummy, keep result
     uint8_t value = spi_transfer(0x00);
 
-    // Step 5: CS high
-    GPIOB->ODR |= GPIO_ODR_OD7;
+    // Step 5: set CS // drives PA4 high
+    GPIOA->ODR |= GPIO_ODR_OD4;
 
     return value;
 }
 
 void spi_write_reg(uint8_t reg, uint8_t val) {
     //Step 1: Pull CS low
-    GPIOB->ODR &= ~(GPIO_ODR_OD7);
+    GPIOA->ODR &= ~(GPIO_ODR_OD4);
     
     // Step 2: send address to write at
     spi_transfer(reg);
@@ -119,12 +124,12 @@ void spi_write_reg(uint8_t reg, uint8_t val) {
     spi_transfer(val);
 
     //Step 4: Pull CS high
-    GPIOB->ODR |= GPIO_ODR_OD7;
+    GPIOA->ODR |= GPIO_ODR_OD4;
 }
 
 void spi_read_burst(uint8_t reg, uint8_t *buf, uint16_t n) {
     //Step 1: Pull CS low
-    GPIOB->ODR &= ~(GPIO_ODR_OD7);
+    GPIOA->ODR &= ~(GPIO_ODR_OD4);
 
     // Step 2: send address, ignore return, OR with bit7=1 for read
     spi_transfer(reg | 0x80); 
@@ -138,12 +143,12 @@ void spi_read_burst(uint8_t reg, uint8_t *buf, uint16_t n) {
     }
 
     //Step 5: CS high
-    GPIOB->ODR |= GPIO_ODR_OD7;
+    GPIOA->ODR |= GPIO_ODR_OD4;
 }
 
 void spi_write_burst(uint8_t reg, const uint8_t *buf, uint16_t n) {
     //Step 1: Pull CS low
-    GPIOB->ODR &= ~(GPIO_ODR_OD7);
+    GPIOA->ODR &= ~(GPIO_ODR_OD4);
     
     // Step 2: send address to write at, bit7=0 so sensor knows write
     spi_transfer(reg);
@@ -154,5 +159,5 @@ void spi_write_burst(uint8_t reg, const uint8_t *buf, uint16_t n) {
     }
 
     //Step 4: CS high
-    GPIOB->ODR |= GPIO_ODR_OD7;
+    GPIOA->ODR |= GPIO_ODR_OD4;
 }
