@@ -10,6 +10,7 @@ extern const uint8_t bmi270_config_file[];
 */
 uint8_t bmi270_init(void) {
     spi_read_reg(0x00); // Dummy read to toggle CSB (i2c->spi)
+    for (volatile int i = 0; i < 3000; i++); //roughly 1ms, chip needs idle time after the mode switch (DS t_IDLE_rd) or the next read floats MISO
     uint8_t whoami = spi_read_reg(0x00); // Once the chip is in SPI, check register 0x00 for the chip ID (expect 0x24)
     if(whoami != 0x24) return 1; // check chip ID is correct before initializing
 
@@ -21,6 +22,7 @@ uint8_t bmi270_init(void) {
     for (volatile int i = 0; i < 30000; i++); //roughly 9-13ms at 16MHz
 
     spi_read_reg(0x00); // Dummy read, reset put chip back into i2c mode
+    for (volatile int i = 0; i < 3000; i++); //roughly 1ms, same idle time after switching back to spi
 
     /*
         BMI270s feature engine is empty at power-up, must upload an 8KB configuration blob

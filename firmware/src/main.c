@@ -1,6 +1,6 @@
 //looks in the vendor/cmsis from CMakeLists
 #include <stdint.h>
-#include "bme280.h" 
+#include "bme280.h"
 #include "i2c.h"
 #include "fdcan.h"
 #include "blink.h"
@@ -10,9 +10,9 @@
 int main(void) {
 
     // -- Peripheral bring-up (buses + LED pin) --
-    led_init(); //PA5 -> output, LED off
-    // i2c_init(); //i2c1 master on PB8/PB9 must come before sensor access
-    // fdcan_init(); //FDCAN1 @500k, internal loopback
+    led_init(); //PB0 -> output, LED off
+    i2c_init(); //i2c1 master on PA15/PB7 must come before sensor access
+    // fdcan_init(); //FDCAN1 @500k, internal loopback (not ported to FDCAN2 yet)
 
     for (volatile int i = 0; i < 200000; i++);   // ~60ms, let the BMI270 finish POR
     spi_init(); //spi en
@@ -24,37 +24,30 @@ int main(void) {
     // //initialize varibles to write into
     // //volatile because main never reads these, they exist for the debugger
     // volatile uint32_t id, dlc, d0, d1;
-    // //send the locations of each variable 
+    // //send the locations of each variable
     // fdcan_recv(&id, &dlc, &d0, &d1);
 
-    // -- I2C + BME280 Smoke Test -- 
+    // -- I2C + BME280 Smoke Test --
     // bme280_init() reads chip ID 0xD0: returns 0 if it == 0x60, else 1
-    // uint8_t bme_status = bme280_init();
+    uint8_t bme_status = bme280_init();
 
-    // // BMI + SPI Smoke Test
-    // uint8_t bmi_status = bmi270_init();
+    // -- SPI + BMI270 Smoke Test --
+    // bmi270_init() checks chip ID 0x24, uploads the 8KB config, checks init_ok: returns 0 on success
+    uint8_t bmi_status = bmi270_init();
 
     // Fail Trap:
     // On failure: light the LED solid and halt, before TIM6 ever starts
     // Because timer never runs the ISR never fires, nothing toggles
-    // PA5 -> LED stays solid will fail
-    // if (bme_status != 0 || bmi_status != 0) {
-    //     led_on();
-    //     while(1) {}
-    // }
-
-    spi_read_reg(0x00);                 // dummy, kicks chip into SPI mode
-    uint8_t id = spi_read_reg(0x00);    // real read, want 0x24
-
-    if (id != 0x24) {
+    // PB0 -> LED stays solid will fail
+    if (bme_status != 0 || bmi_status != 0) {
         led_on();
         while(1) {}
     }
 
-    // -- reached only on succcess -- 
+    // -- reached only on succcess --
     // It is safe to read now, the bus is known-good
     // volatile because inspected by GDB not read by code
-    // volatile bme280_reading_t reading;
+    volatile bme280_reading_t reading;
 
     volatile bmi270_reading_t acc_gyr_result;
 
@@ -63,14 +56,14 @@ int main(void) {
 
     // re-read forever so live values apppear in the debugger
     while (1) {
-        // reading = bme280_read();
-        // acc_gyr_result = bmi270_read();
-        // volatile float temp_c    = reading.temperature / 100.0f;   // C
-        // volatile float press_hpa = reading.pressure    / 25600.0f;  // hPa
-        // volatile float hum_rh    = reading.humidity    / 1024.0f;   // %RH
-        // for (volatile int i = 0; i < 400000; i++);                  // pace (a few reads/sec)
+        reading = bme280_read();
+        acc_gyr_result = bmi270_read();
+        volatile float temp_c    = reading.temperature / 100.0f;   // C
+        volatile float press_hpa = reading.pressure    / 25600.0f;  // hPa
+        volatile float hum_rh    = reading.humidity    / 1024.0f;   // %RH
+        for (volatile int i = 0; i < 400000; i++);                  // pace (a few reads/sec)
      }
-    
+
 
 
 }
